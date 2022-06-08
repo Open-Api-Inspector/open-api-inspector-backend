@@ -1,6 +1,7 @@
 package main
 
 import (
+	websockethub "ApiInspector/websocket-hub"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -9,12 +10,10 @@ import (
 const OPEN_API_ADDRESS = ":8080"
 const WEBSOCKET_ADDRESS = ":8081"
 
+var wsConnectionHub = websockethub.NewWsConnectionHub()
+
 func handleAnyRoute(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "OK"})
-}
-
-func handleWebSocket(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{"message": "Web Socket OK!"})
 }
 
 func main() {
@@ -25,6 +24,6 @@ func main() {
 
 	// Serve the API for websocket
 	route_ws := gin.Default()
-	route_ws.GET("/ws", handleWebSocket)
+	route_ws.GET("/ws", wsConnectionHub.AddClient)
 	route_ws.Run(WEBSOCKET_ADDRESS)
 }
