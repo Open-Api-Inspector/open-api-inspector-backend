@@ -53,10 +53,10 @@ func (wsc webSocketClient) HandleSocket() {
 	for {
 		mt, message, err := wsc.webSocketConnection.ReadMessage()
 		if message != nil {
-			fmt.Print(string(message))
+			fmt.Println(string(message))
 		}
 		if err != nil {
-			fmt.Printf(err.Error())
+			fmt.Println(err.Error())
 			break
 		}
 		wsc.webSocketConnection.WriteMessage(mt, message)
