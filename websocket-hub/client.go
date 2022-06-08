@@ -24,6 +24,7 @@ var wsUpgrader = websocket.Upgrader{
 
 type WebSocketClient interface {
 	HandleSocket()
+	SendMessage(s []byte)
 }
 
 type webSocketClient struct {
@@ -51,7 +52,7 @@ func NewWebSocketClient(c *gin.Context) webSocketClient {
 func (wsc webSocketClient) HandleSocket() {
 	defer wsc.webSocketConnection.Close()
 	for {
-		mt, message, err := wsc.webSocketConnection.ReadMessage()
+		_, message, err := wsc.webSocketConnection.ReadMessage()
 		if message != nil {
 			fmt.Println(string(message))
 		}
@@ -59,7 +60,14 @@ func (wsc webSocketClient) HandleSocket() {
 			fmt.Println(err.Error())
 			break
 		}
-		wsc.webSocketConnection.WriteMessage(mt, message)
+		// wsc.webSocketConnection.WriteMessage(mt, message)
 	}
 	wsc.status = CLOSED
+}
+
+func (wsc webSocketClient) SendMessage(message []byte) {
+	if wsc.status != CONNECTED {
+		return
+	}
+	wsc.webSocketConnection.WriteMessage(0, message)
 }

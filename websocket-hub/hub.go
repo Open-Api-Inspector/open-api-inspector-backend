@@ -1,12 +1,13 @@
 package websockethub
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
-	"github.com/gorilla/websocket"
 )
 
 type WSConnection interface {
-	AddClient(websocketConnection *websocket.Conn)
+	AddClient(c *gin.Context)
 	RemoveClient()
 	Broadcast()
 }
@@ -17,13 +18,16 @@ type wsConnection struct {
 
 func NewWsConnectionHub() wsConnection {
 	return wsConnection{
-		clients: nil,
+		clients: make([]webSocketClient, 0),
 	}
 }
 
 func (wsc wsConnection) AddClient(c *gin.Context) {
 	webSocketClient := NewWebSocketClient(c)
-	wsc.clients = append(wsc.clients, webSocketClient)
+	fmt.Println(webSocketClient)
+	data := append(wsc.clients, webSocketClient)
+	fmt.Println(len(data))
+	wsc.clients = data
 }
 
 func (wsc wsConnection) RemoveClient() {
@@ -31,5 +35,10 @@ func (wsc wsConnection) RemoveClient() {
 }
 
 func (wsc wsConnection) Broadcast() {
-	// TODO: Broadcast
+	message := []byte("Hello!")
+	fmt.Println("Broadcasting")
+	fmt.Println(len(wsc.clients))
+	for _, client := range wsc.clients {
+		client.SendMessage(message)
+	}
 }

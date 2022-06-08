@@ -1,6 +1,7 @@
 package main
 
 import (
+	requesthub "ApiInspector/request-hub"
 	websockethub "ApiInspector/websocket-hub"
 	"net/http"
 
@@ -11,8 +12,13 @@ const OPEN_API_ADDRESS = ":8080"
 const WEBSOCKET_ADDRESS = ":8081"
 
 var wsConnectionHub = websockethub.NewWsConnectionHub()
+var requestHub = requesthub.NewRequestHub(wsConnectionHub)
 
 func handleAnyRoute(c *gin.Context) {
+	// TODO: Add Support for other type of request
+	requestHub.AddRequest(c)
+	wsConnectionHub.Broadcast()
+	// TODO: Wait for response from frontend.
 	c.JSON(http.StatusOK, gin.H{"message": "OK"})
 }
 
