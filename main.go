@@ -16,8 +16,8 @@ var requestManager = requestmanager.NewRequestManager()
 
 func handleAnyRoute(c *gin.Context) {
 	// TODO: Add Support for other type of request
-	requestManager.AddRequest(c)
-	wsConnectionHub.Broadcast()
+	request := requestManager.AddRequest(c)
+	wsConnectionHub.Broadcast(request)
 	// TODO: Wait for response from frontend.
 	c.JSON(http.StatusOK, gin.H{"message": "OK"})
 }

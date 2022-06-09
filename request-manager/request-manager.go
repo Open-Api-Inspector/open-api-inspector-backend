@@ -2,7 +2,6 @@ package requestmanager
 
 import (
 	"fmt"
-	"io"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -22,10 +21,10 @@ func NewRequestManager() *requestManager {
 	}
 }
 
-func (r *requestManager) AddRequest(c *gin.Context) {
-	requestBody, _ := io.ReadAll(c.Request.Body)
+func (r *requestManager) AddRequest(c *gin.Context) ApiRequest {
 	requestId := uuid.New().String()
-	apiRequest := NewApiRequest(requestId, c.Request.Header, requestBody)
-	r.ApiRequests[requestId] = apiRequest
-	fmt.Println("Request Num: ", len(r.ApiRequests))
+	apiRequest := NewApiRequest(c, requestId)
+	r.ApiRequests[requestId] = *apiRequest
+	fmt.Println("Adding new request to request pool with id", requestId)
+	return *apiRequest
 }
