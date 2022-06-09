@@ -16,8 +16,8 @@ type apiRequest struct {
 	ResponseStatusCode int
 }
 
-func NewApiRequest(header http.Header, body []byte) apiRequest {
-	return apiRequest{
+func NewApiRequest(header http.Header, body []byte) *apiRequest {
+	return &apiRequest{
 		RequestId:     uuid.New().String(),
 		RequestHeader: header,
 		RequestBody:   body,
