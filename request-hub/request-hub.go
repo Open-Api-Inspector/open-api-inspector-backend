@@ -13,10 +13,10 @@ type RequestHub interface {
 
 type requestHub struct {
 	apiRequests     []ApiRequest
-	WsConnectionHub websockethub.WSConnection
+	WsConnectionHub websockethub.WSConnectionHub
 }
 
-func NewRequestHub(wsConnectionHub websockethub.WSConnection) requestHub {
+func NewRequestHub(wsConnectionHub websockethub.WSConnectionHub) requestHub {
 	return requestHub{
 		WsConnectionHub: wsConnectionHub,
 	}

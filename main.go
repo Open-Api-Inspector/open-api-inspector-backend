@@ -23,10 +23,11 @@ func handleAnyRoute(c *gin.Context) {
 }
 
 func main() {
+
 	// Serve the Open API for loggin the request.
-	route_open_api := gin.Default()
-	route_open_api.NoRoute(handleAnyRoute)
-	go route_open_api.Run(OPEN_API_ADDRESS)
+	routeOpenApi := gin.Default()
+	routeOpenApi.NoRoute(handleAnyRoute)
+	go routeOpenApi.Run(OPEN_API_ADDRESS)
 
 	// Serve the API for websocket
 	route_ws := gin.Default()

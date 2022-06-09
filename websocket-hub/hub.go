@@ -1,43 +1,36 @@
 package websockethub
 
 import (
-	"fmt"
-
 	"github.com/gin-gonic/gin"
 )
 
-type WSConnection interface {
+type WSConnectionHub interface {
 	AddClient(c *gin.Context)
 	RemoveClient()
 	Broadcast()
 }
 
-type wsConnection struct {
+type wsConnectionHub struct {
 	clients []webSocketClient
 }
 
-func NewWsConnectionHub() wsConnection {
-	return wsConnection{
-		clients: make([]webSocketClient, 0),
+func NewWsConnectionHub() *wsConnectionHub {
+	return &wsConnectionHub{
+		clients: nil,
 	}
 }
 
-func (wsc wsConnection) AddClient(c *gin.Context) {
+func (wsc *wsConnectionHub) AddClient(c *gin.Context) {
 	webSocketClient := NewWebSocketClient(c)
-	fmt.Println(webSocketClient)
-	data := append(wsc.clients, webSocketClient)
-	fmt.Println(len(data))
-	wsc.clients = data
+	wsc.clients = append(wsc.clients, *webSocketClient)
 }
 
-func (wsc wsConnection) RemoveClient() {
+func (wsc *wsConnectionHub) RemoveClient() {
 	// TODO: Handle This
 }
 
-func (wsc wsConnection) Broadcast() {
+func (wsc *wsConnectionHub) Broadcast() {
 	message := []byte("Hello!")
-	fmt.Println("Broadcasting")
-	fmt.Println(len(wsc.clients))
 	for _, client := range wsc.clients {
 		client.SendMessage(message)
 	}

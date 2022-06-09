@@ -33,10 +33,10 @@ type webSocketClient struct {
 	status              WebSocketStatus
 }
 
-func NewWebSocketClient(c *gin.Context) webSocketClient {
+func NewWebSocketClient(c *gin.Context) *webSocketClient {
 
 	ws, _ := wsUpgrader.Upgrade(c.Writer, c.Request, nil)
-	wsc := webSocketClient{
+	wsc := &webSocketClient{
 		ginContext:          c,
 		webSocketConnection: ws,
 		status:              INIT,
@@ -49,7 +49,7 @@ func NewWebSocketClient(c *gin.Context) webSocketClient {
 	return wsc
 }
 
-func (wsc webSocketClient) HandleSocket() {
+func (wsc *webSocketClient) HandleSocket() {
 	defer wsc.webSocketConnection.Close()
 	for {
 		_, message, err := wsc.webSocketConnection.ReadMessage()
@@ -65,9 +65,10 @@ func (wsc webSocketClient) HandleSocket() {
 	wsc.status = CLOSED
 }
 
-func (wsc webSocketClient) SendMessage(message []byte) {
+func (wsc *webSocketClient) SendMessage(message []byte) {
 	if wsc.status != CONNECTED {
 		return
 	}
-	wsc.webSocketConnection.WriteMessage(0, message)
+	fmt.Println("Sending message")
+	wsc.webSocketConnection.WriteMessage(1, message)
 }
