@@ -2,7 +2,7 @@ package main
 
 import (
 	"net/http"
-	requesthub "open-api-inspector-backend/request-hub"
+	requestmanager "open-api-inspector-backend/request-manager"
 	websockethub "open-api-inspector-backend/websocket-hub"
 
 	"github.com/gin-gonic/gin"
@@ -12,7 +12,7 @@ const OPEN_API_ADDRESS = ":8080"
 const WEBSOCKET_ADDRESS = ":8081"
 
 var wsConnectionHub = websockethub.NewWsConnectionHub()
-var requestHub = requesthub.NewRequestHub(wsConnectionHub)
+var requestHub = requestmanager.NewRequestManager(wsConnectionHub)
 
 func handleAnyRoute(c *gin.Context) {
 	// TODO: Add Support for other type of request

@@ -1,4 +1,4 @@
-package requesthub
+package requestmanager
 
 import (
 	"net/http"

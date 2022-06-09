@@ -1,4 +1,4 @@
-package requesthub
+package requestmanager
 
 import (
 	"fmt"
@@ -8,22 +8,22 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type RequestHub interface {
+type RequestManager interface {
 	AddRequest(c *gin.Context)
 }
 
-type requestHub struct {
+type requestManager struct {
 	apiRequests     []ApiRequest
 	WsConnectionHub websockethub.WSConnectionHub
 }
 
-func NewRequestHub(wsConnectionHub websockethub.WSConnectionHub) *requestHub {
-	return &requestHub{
+func NewRequestManager(wsConnectionHub websockethub.WSConnectionHub) *requestManager {
+	return &requestManager{
 		WsConnectionHub: wsConnectionHub,
 	}
 }
 
-func (r *requestHub) AddRequest(c *gin.Context) {
+func (r *requestManager) AddRequest(c *gin.Context) {
 	requestBody, _ := io.ReadAll(c.Request.Body)
 	apiRequest := NewApiRequest(c.Request.Header, requestBody)
 	r.apiRequests = append(r.apiRequests, apiRequest)
