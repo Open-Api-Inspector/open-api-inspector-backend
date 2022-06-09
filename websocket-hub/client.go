@@ -1,8 +1,10 @@
 package websockethub
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
+	requestmanager "open-api-inspector-backend/request-manager"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
@@ -27,6 +29,7 @@ type WebSocketClient interface {
 	SendMessage(s []byte)
 	setStatus()
 	CloseConnection()
+	SendNewRequest(r requestmanager.ApiRequest)
 }
 
 type webSocketClient struct {
@@ -87,6 +90,16 @@ func (wsc *webSocketClient) SendMessage(message []byte) {
 	if wsc.status != CONNECTED {
 		return
 	}
-	fmt.Println("Sending message to client ", wsc.ClientId)
+
 	wsc.webSocketConnection.WriteMessage(1, message)
+}
+
+func (wsc *webSocketClient) SendNewRequest(r requestmanager.ApiRequest) {
+	fmt.Println("Sending request", r.RequestId, "to client", wsc.ClientId)
+	requestDetail, err := json.Marshal(r)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	wsc.SendMessage(requestDetail)
 }
