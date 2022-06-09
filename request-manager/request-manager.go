@@ -3,9 +3,9 @@ package requestmanager
 import (
 	"fmt"
 	"io"
-	websockethub "open-api-inspector-backend/websocket-hub"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type RequestManager interface {
@@ -13,19 +13,19 @@ type RequestManager interface {
 }
 
 type requestManager struct {
-	apiRequests     []ApiRequest
-	WsConnectionHub websockethub.WSConnectionHub
+	ApiRequests map[string]ApiRequest
 }
 
-func NewRequestManager(wsConnectionHub websockethub.WSConnectionHub) *requestManager {
+func NewRequestManager() *requestManager {
 	return &requestManager{
-		WsConnectionHub: wsConnectionHub,
+		ApiRequests: make(map[string]ApiRequest, 0),
 	}
 }
 
 func (r *requestManager) AddRequest(c *gin.Context) {
 	requestBody, _ := io.ReadAll(c.Request.Body)
-	apiRequest := NewApiRequest(c.Request.Header, requestBody)
-	r.apiRequests = append(r.apiRequests, apiRequest)
-	fmt.Println("Request Num: ", len(r.apiRequests))
+	requestId := uuid.New().String()
+	apiRequest := NewApiRequest(requestId, c.Request.Header, requestBody)
+	r.ApiRequests[requestId] = apiRequest
+	fmt.Println("Request Num: ", len(r.ApiRequests))
 }

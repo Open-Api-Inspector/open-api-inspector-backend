@@ -12,11 +12,11 @@ const OPEN_API_ADDRESS = ":8080"
 const WEBSOCKET_ADDRESS = ":8081"
 
 var wsConnectionHub = websockethub.NewWsConnectionHub()
-var requestHub = requestmanager.NewRequestManager(wsConnectionHub)
+var requestManager = requestmanager.NewRequestManager()
 
 func handleAnyRoute(c *gin.Context) {
 	// TODO: Add Support for other type of request
-	requestHub.AddRequest(c)
+	requestManager.AddRequest(c)
 	wsConnectionHub.Broadcast()
 	// TODO: Wait for response from frontend.
 	c.JSON(http.StatusOK, gin.H{"message": "OK"})
@@ -31,6 +31,8 @@ func main() {
 
 	// Serve the API for websocket
 	route_ws := gin.Default()
-	route_ws.GET("/ws", wsConnectionHub.AddClient)
+	route_ws.GET("/ws", func(ctx *gin.Context) {
+		wsConnectionHub.AddClient(ctx, requestManager.ApiRequests)
+	})
 	route_ws.Run(WEBSOCKET_ADDRESS)
 }

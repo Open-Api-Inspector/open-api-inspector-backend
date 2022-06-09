@@ -2,8 +2,6 @@ package requestmanager
 
 import (
 	"net/http"
-
-	"github.com/google/uuid"
 )
 
 type ApiRequest interface {
@@ -16,9 +14,9 @@ type apiRequest struct {
 	ResponseStatusCode int
 }
 
-func NewApiRequest(header http.Header, body []byte) *apiRequest {
+func NewApiRequest(requestId string, header http.Header, body []byte) *apiRequest {
 	return &apiRequest{
-		RequestId:     uuid.New().String(),
+		RequestId:     requestId,
 		RequestHeader: header,
 		RequestBody:   body,
 	}
