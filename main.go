@@ -1,9 +1,9 @@
 package main
 
 import (
-	requesthub "ApiInspector/request-hub"
-	websockethub "ApiInspector/websocket-hub"
 	"net/http"
+	requesthub "open-api-inspector-backend/request-hub"
+	websockethub "open-api-inspector-backend/websocket-hub"
 
 	"github.com/gin-gonic/gin"
 )
