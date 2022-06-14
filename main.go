@@ -32,7 +32,7 @@ func main() {
 	// Serve the API for websocket
 	route_ws := gin.Default()
 	route_ws.GET("/ws", func(ctx *gin.Context) {
-		wsConnectionHub.AddClient(ctx, requestManager.ApiRequests)
+		wsConnectionHub.AddClient(ctx, requestManager.ApiRequestOrder)
 	})
 	route_ws.Run(WEBSOCKET_ADDRESS)
 }

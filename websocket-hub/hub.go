@@ -24,11 +24,11 @@ func NewWsConnectionHub() *wsConnectionHub {
 	}
 }
 
-func (wsc *wsConnectionHub) AddClient(c *gin.Context, apiRequests map[string]requestmanager.ApiRequest) {
+func (wsc *wsConnectionHub) AddClient(c *gin.Context, apiRequestsOrder []requestmanager.ApiRequest) {
 	clientId := uuid.New().String()
 	webSocketClient := NewWebSocketClient(c, clientId, wsc)
 	// Send old request to the new client
-	for _, request := range apiRequests {
+	for _, request := range apiRequestsOrder {
 		webSocketClient.SendNewRequest(request)
 	}
 	wsc.clients[clientId] = *webSocketClient
